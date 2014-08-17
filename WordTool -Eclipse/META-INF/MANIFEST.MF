@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Rsrc-Class-Path: ./ JTattoo-1.6.10.jar
+Class-Path: .
+Rsrc-Main-Class: org.onebone.He.W.wordtool14.Starter
+Main-Class: org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader
+SplashScreen-Image: images/splash.png

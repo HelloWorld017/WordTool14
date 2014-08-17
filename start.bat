@@ -1,0 +1,1 @@
+start javaw -jar WordTool14.jar
