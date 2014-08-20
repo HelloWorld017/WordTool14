@@ -33,3 +33,12 @@ EERT mode bug fix.
 custom regex and custom string bug fix.
 add new feature 'Resource2Source'
 no more using CRLF and using LF for linux/unix support.
+
+----
+
+2014.08.20 21:45
+version 2005 βeta
+
+updated UI to JavaFX.
+fixed new options : useCRLF
+divded Clean to empty Lines and empty Brackets

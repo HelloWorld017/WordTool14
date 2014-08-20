@@ -54,14 +54,16 @@ public class MainActivity extends Application {
 		//------------------optionPanel------------------
 		optionPanel = new VBox();
 		optionPanel.getStyleClass().add("background");
-		checks = new CheckBox[7]; // Prepare check boxes
+		checks = new CheckBox[9]; // Prepare check boxes
 		checks[0] = new CheckBox("< inside >");
 		checks[1] = new CheckBox("\u300A and \u300B");
 		checks[2] = new CheckBox("Contents inside ( and )");
 		checks[3] = new CheckBox("Number comments");
 		checks[4] = new CheckBox("Chinese charaters");
 		checks[5] = new CheckBox("Except English, Korean, Number and Symbols");
-		checks[6] = new CheckBox("Clean");
+		checks[6] = new CheckBox("Empty Lines");
+		checks[7] = new CheckBox("Empty Brackets");
+		checks[8] = new CheckBox("Use CRNF (if newline has been deleted.)");
 		
 		for(CheckBox box : checks){
 			if(box == checks[5]){
@@ -128,6 +130,9 @@ public class MainActivity extends Application {
 			    		if(checks[6].isSelected()){
 			    			str = Destroier.removeNewLines(str);
 			    		}
+			    		if(checks[7].isSelected()){
+			    			str = Destroier.removeEmptyBrackets(str);
+			    		}
 						resultArea.setText(str);
 					} catch (FileNotFoundException e1) {
 						Dialogs.create().owner(stage).title("Error!").masthead("File is not found.").message("File is not found.\r\nIf this can't find file, please use textbox.\r\nSorry for inconvenience.").showError();
@@ -158,6 +163,12 @@ public class MainActivity extends Application {
 							String str = Destroier.delete(textArea.getText(), checks[0].isSelected(), checks[1].isSelected(), checks[2].isSelected(), checks[3].isSelected(), checks[4].isSelected(), checks[5].isSelected(), customRegex.getText(), customString.getText());
 							if(checks[6].isSelected()){
 								str = Destroier.removeNewLines(str);
+							}
+							if(checks[7].isSelected()){
+				    			str = Destroier.removeEmptyBrackets(str);
+				    		}
+							if(checks[8].isSelected()){
+								str = Destroier.useCRNF(str);
 							}
 							resultArea.setText(str);
 						}else{

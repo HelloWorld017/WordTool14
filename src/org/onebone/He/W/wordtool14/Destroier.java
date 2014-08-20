@@ -17,6 +17,7 @@ public class Destroier {
 	      String b;
 	      while((b = br.readLine()) != null){
 	         sb.append(b);
+	         sb.append("\n");
 	      }
 	      br.close();
 	      isr.close();
@@ -49,9 +50,18 @@ public class Destroier {
 				ret += s+"\n";
 			}
 		}
-		ret = ret.replaceAll("[(][ ]*[)]", "");
 		
 		return ret;
+	}
+	
+	public static String removeEmptyBrackets(String str){
+		
+		return str.replaceAll("[(][ ]*[)]", "");
+	}
+	
+	public static String useCRNF(String str){
+		
+		return str.replaceAll("\n", "\r\n");
 	}
 	
 	private static String delete_calc(String s, boolean less, boolean less_less, boolean bracket, boolean number_annotation, boolean hanja, boolean except_eng_num_kor, String customRegex, String customString){

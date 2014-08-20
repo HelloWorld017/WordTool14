@@ -10,6 +10,7 @@ This can help your report by removing Chinese character, comments and more to do
 You can distribute by following CCL license(CC-BY-NC).
 
 UI Library Source : JMetro : http://pixelduke.wordpress.com/
+
 Dialog Library Source : ControlsFX : http://fxexperience.com/controlsfx/
 
 ----
@@ -22,4 +23,5 @@ Dialog Library Source : ControlsFX : http://fxexperience.com/controlsfx/
 이 프로그램은 CCL 라이센스 (CC-BY-NC) 에 따라 배포될수 있습니다.
 
 UI 라이브러리 : JMetro : http://pixelduke.wordpress.com/
+
 대화상자 라이브러리 : ControlsFX : http://fxexperience.com/controlsfx/
