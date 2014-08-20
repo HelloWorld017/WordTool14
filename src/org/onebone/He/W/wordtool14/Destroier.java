@@ -45,11 +45,11 @@ public class Destroier {
 		String[] strs = str.split("\n");
 		String ret = "";
 		for(String s : strs){
-			s.replaceAll("[(][ ]*[)]", "");
 			if(s.trim().equals("") == false){
 				ret += s+"\n";
 			}
 		}
+		ret = ret.replaceAll("[(][ ]*[)]", "");
 		
 		return ret;
 	}
