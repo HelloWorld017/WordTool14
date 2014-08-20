@@ -1,247 +1,301 @@
 package org.onebone.He.W.wordtool14;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
+//------------------About Clipboard------------------
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+//------------------About Files------------------
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
-@SuppressWarnings("serial")
-public class MainActivity extends JFrame{
-	private JPanel mainPanel, optionPanel, contentPanel, buttonPanel;
-	//, bottomPanel;
-	private JTextArea textArea, resultArea, customRegex, customString;
-	private JButton fileChooseBtn, convertBtn;
-	private JCheckBox[] checks;
-	private File retFile;
+
+//------------------JavaFX GUI------------------
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
+public class MainActivity extends Application {
 	
-	public MainActivity(){
-		super("WordTool14");
+	//------------------Declare variables------------------
+	private CheckBox[] checks;
+	private VBox optionPanel, rightWrapper;
+	private HBox buttonWrapper;
+	private GridPane root, leftWrapper;
+	private BorderPane regexPanel, stringPanel;
+	private TextArea customString, customRegex, textArea, resultArea;
+	private Button fileChooseBtn, convertBtn, copyBtn, clearBtn, Res2srcBtn ;
+	
+	@Override
+	public void start(Stage stage) throws Exception {
 		
-		URL url = ClassLoader.getSystemResource("images/icon.png");
+		//------------------optionPanel------------------
+		optionPanel = new VBox();
+		optionPanel.getStyleClass().add("background");
+		checks = new CheckBox[7]; // Prepare check boxes
+		checks[0] = new CheckBox("< inside >");
+		checks[1] = new CheckBox("\u300A and \u300B");
+		checks[2] = new CheckBox("Contents inside ( and )");
+		checks[3] = new CheckBox("Number comments");
+		checks[4] = new CheckBox("Chinese charaters");
+		checks[5] = new CheckBox("Except English, Korean, Number and Symbols");
+		checks[6] = new CheckBox("Clean");
 		
-		this.setIconImage(Toolkit.getDefaultToolkit().createImage(url));
-		try{
-			UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
-			JFrame.setDefaultLookAndFeelDecorated(true);
-			setUIFont(new javax.swing.plaf.FontUIResource("맑은 고딕", Font.BOLD, 12));
-			UIManager.put("TextArea.font", new javax.swing.plaf.FontUIResource("Gulim", Font.BOLD, 12));
-		}catch(Exception e){
-			JOptionPane.showMessageDialog(this, e.getMessage(), "Error during rendering", JOptionPane.ERROR_MESSAGE);
+		for(CheckBox box : checks){
+			if(box == checks[5]){
+				box.setSelected(false);
+			}else{
+				box.setSelected(true);
+			}
+			optionPanel.getChildren().add(box);
+		
 		}
+		//------------------add checkBoxes------------------
 		
-		Border border = BorderFactory.createLineBorder(Color.decode("#d1d1d1"));
-		optionPanel = new JPanel();
-		optionPanel.setLayout(new BoxLayout(optionPanel, BoxLayout.Y_AXIS));
-		 
-		checks = new JCheckBox[7]; // Prepare check boxes
-		checks[0] = new JCheckBox("< inside >", true);
-		checks[1] = new JCheckBox("\u300A and \u300B", true);
-		checks[2] = new JCheckBox("Contents inside ( and )", true);
-		checks[3] = new JCheckBox("Number comments", true);
-		checks[4] = new JCheckBox("Chinese charaters", true);
-		checks[5] = new JCheckBox("Except English, Korean, Number and Symbols", false);
-		checks[6] = new JCheckBox("Clean", true);
+		//------------------regexPanel------------------
+		regexPanel = new BorderPane();
+		regexPanel.getStyleClass().add("background");
+		Label customRegexLabel = new Label("Custom Regex");
+		customRegexLabel.getStyleClass().add("item-title");
+		regexPanel.setLeft(customRegexLabel);
+		customRegex = new TextArea("\\[EDIT\\]|\\[편집\\]\n.*문서를 참고하십시오.");
+		ScrollPane regexScr = new ScrollPane(customRegex);
+		regexScr.setScaleX(optionPanel.getScaleX());
+		regexScr.setScaleY(optionPanel.getScaleY());
+		regexScr.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		regexScr.setVbarPolicy(ScrollBarPolicy.NEVER);
+		regexPanel.setBottom(regexScr);
 		
-		for(JCheckBox box : checks){
-			optionPanel.add(box, "SOUTH");
-		}
+		//------------------customPanel------------------
+		stringPanel = new BorderPane();
+		stringPanel.getStyleClass().add("background");
+		Label customStringLabel = new Label("Custom String");
+		customStringLabel.getStyleClass().add("item-title");
+		stringPanel.setLeft(customStringLabel);
+		customString = new TextArea("");
+		ScrollPane stringScr = new ScrollPane(customString);
+		stringScr.setScaleX(optionPanel.getScaleX());
+		stringScr.setScaleY(optionPanel.getScaleY());
+		stringPanel.setBottom(stringScr);
 		
-		JPanel regexPanel = new JPanel(new BorderLayout());
-		regexPanel.add(new JLabel("Custom regex"), "West");
-		customRegex = new JTextArea("\\[EDIT\\]|\\[편집\\]\n.*문서를 참고하십시오.");
-		customRegex.setBorder(border);
-		JScrollPane regexScr = new JScrollPane(customRegex);
-		regexPanel.add(regexScr);
+		//------------------rightWrapper------------------
+		rightWrapper = new VBox();
+		rightWrapper.getStyleClass().add("background");
+		rightWrapper.getChildren().add(optionPanel);
+		rightWrapper.getChildren().add(regexPanel);
+		rightWrapper.getChildren().add(stringPanel);
 		
-		JPanel stringPanel = new JPanel(new BorderLayout());
-		stringPanel.add(new JLabel("Custom string"), "West");
-		customString = new JTextArea("");
-		customString.setBorder(border);
-		JScrollPane stringScr = new JScrollPane(customString);
-		stringPanel.add(stringScr);
+		//------------------Start drawing left side------------------
 		
-		optionPanel.add(regexPanel);
-		optionPanel.add(stringPanel);
+		//------------------addButtons------------------
 		
-		//prepare FileChooser
-		fileChooseBtn = new JButton("Choose File");
-		fileChooseBtn.addActionListener(new ActionListener(){
+		//------------------fileChooseBtn------------------
+		fileChooseBtn = new Button("Choose File");
+		fileChooseBtn.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser fc = new JFileChooser();
-			    FileNameExtensionFilter filter = new FileNameExtensionFilter("Text File", "txt");
-			    fc.setFileFilter(filter);
-			    int returnVal = fc.showOpenDialog(MainActivity.this);
-			    if(returnVal == JFileChooser.APPROVE_OPTION){
+			public void handle(ActionEvent arg0) {
+				FileChooser fc = new FileChooser();
+			    ExtensionFilter TextFile = new ExtensionFilter("Text File", "*.txt");
+			    ExtensionFilter AllFiles = new ExtensionFilter("All Files", "*.*");
+			    fc.getExtensionFilters().add(TextFile);
+			    fc.getExtensionFilters().add(AllFiles);
+			    File returnVal = fc.showOpenDialog(stage);
+			    if(returnVal != null){
 			    	try {
-			    		String str = Destroier.delete(fc.getSelectedFile(), checks[0].isSelected(), checks[1].isSelected(), checks[2].isSelected(), checks[3].isSelected(), checks[4].isSelected(), checks[5].isSelected(), customRegex.getText(), customString.getText());
+			    		String str = Destroier.delete(returnVal, checks[0].isSelected(), checks[1].isSelected(), checks[2].isSelected(), checks[3].isSelected(), checks[4].isSelected(), checks[5].isSelected(), customRegex.getText(), customString.getText());
 			    		if(checks[6].isSelected()){
 			    			str = Destroier.removeNewLines(str);
 			    		}
 						resultArea.setText(str);
 					} catch (FileNotFoundException e1) {
-						JOptionPane.showMessageDialog(MainActivity.this, "File is not found", "No text source found", JOptionPane.ERROR_MESSAGE);
+						Dialogs.create().owner(stage).title("Error!").masthead("File is not found.").message("File is not found.\r\nIf this can't find file, please use textbox.\r\nSorry for inconvenience.").showError();
 					} catch (IOException e1) {
-						JOptionPane.showMessageDialog(MainActivity.this, e1.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+						Dialogs.create().owner(stage).title("Error!").masthead("An IOException is occurred.").showException(e1);
 					}
 			    }
 			}
 		});
 		
-		JButton copyBtn = new JButton("Copy"); // copy button
-		copyBtn.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				if(resultArea.getText().equals("")){
-					JOptionPane.showMessageDialog(null, "Result text is empty", "Error", JOptionPane.INFORMATION_MESSAGE);
-					return;
-				}
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				StringSelection selection = new StringSelection(resultArea.getText());
-				clipboard.setContents(selection, null);
-			}
-		});
-		JButton Res2srcBtn = new JButton("Result2Source");
-		Res2srcBtn.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if(resultArea.getText().equals("")){
-					JOptionPane.showMessageDialog(null, "Result text is empty", "Error", JOptionPane.INFORMATION_MESSAGE);
-					return;
-				}else{
-					String res = resultArea.getText();
-					String src = textArea.getText();
-					resultArea.setText(src);
-					textArea.setText(res);
-				}
-			}
-			
-		});
-		
-		//prepare ConvertButton
-		convertBtn = new JButton("Eliminate");
-		convertBtn.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				boolean status = false;
-				for(JCheckBox checkBox:checks){
-					if(checkBox.isSelected()){
-						status = true;
-						break;
-					}
-				}
-				if(status == false){
-					JOptionPane.showMessageDialog(MainActivity.this, "Please select elimination options", "ERROR", JOptionPane.INFORMATION_MESSAGE);
-					return;
-				}
-				if(!textArea.getText().equals("")){
-					String str = Destroier.delete(textArea.getText(), checks[0].isSelected(), checks[1].isSelected(), checks[2].isSelected(), checks[3].isSelected(), checks[4].isSelected(), checks[5].isSelected(), customRegex.getText(), customString.getText());
-					if(checks[6].isSelected()){
-						str = Destroier.removeNewLines(str);
-					}
-					resultArea.setText(str);
-				}else{
-					if(retFile == null){
-						JOptionPane.showMessageDialog(MainActivity.this, "Select file or insert text","No text source found", JOptionPane.ERROR_MESSAGE);
-					}else{
-						try {
-							String str = Destroier.delete(retFile, checks[0].isSelected(), checks[1].isSelected(), checks[2].isSelected(), checks[3].isSelected(), checks[4].isSelected(), checks[5].isSelected(), customRegex.getText(), customString.getText());
+		//------------------convertBtn------------------
+				convertBtn = new Button("Eliminate");
+				convertBtn.setOnAction(new EventHandler<ActionEvent>(){
+					@Override
+					public void handle(ActionEvent e) {
+						boolean status = false;
+						for(CheckBox checkBox:checks){
+							if(checkBox.isSelected()){
+								status = true;
+								break;
+							}
+						}
+						if(status == false){
+							Dialogs.create().owner(stage).title("Error!").masthead(null).message("Please select elimination options.").showInformation();
+							return;
+						}
+						if(!textArea.getText().equals("")){
+							String str = Destroier.delete(textArea.getText(), checks[0].isSelected(), checks[1].isSelected(), checks[2].isSelected(), checks[3].isSelected(), checks[4].isSelected(), checks[5].isSelected(), customRegex.getText(), customString.getText());
 							if(checks[6].isSelected()){
 								str = Destroier.removeNewLines(str);
 							}
 							resultArea.setText(str);
-						} catch (FileNotFoundException e1) {
-							JOptionPane.showMessageDialog(MainActivity.this, "Requested file is not found", "No text source found", JOptionPane.ERROR_MESSAGE);
-						} catch (IOException e1) {
-							JOptionPane.showMessageDialog(MainActivity.this, e1.getMessage(), "ERROR",  JOptionPane.ERROR_MESSAGE);
+						}else{
+							Dialogs.create().owner(stage).title("Error!").masthead("Input is empty").message("Please input text!").showInformation();
 						}
 					}
+				});
+		
+		//------------------copyBtn------------------
+		copyBtn = new Button("Copy");
+		copyBtn.setOnAction(new EventHandler<ActionEvent>(){
+			@Override
+			public void handle(ActionEvent e){
+				if(resultArea.getText().equals("")){
+					Dialogs.create().owner(stage).title("Error!").masthead("Result text is empty.").message("Result text is empty. Please elimnate text first.").showInformation();
+					return;
+				}
+				try{
+					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					StringSelection selection = new StringSelection(resultArea.getText());
+					clipboard.setContents(selection, null);
+				}catch(IllegalStateException e1){
+					Dialogs.create().owner(stage).title("Error!").masthead("Clipboard is currently unavailable.").message("Clipboard is currently unavailable.\r\nPlease try again.\r\nIf you are seeing this message more than one time, try to kill another task that is using Clipboard or use ctrl+c").showError();
+				}catch(Exception e2){
+					Dialogs.create().owner(stage).title("Error!").masthead("An Exception has been occured").showException(e2);
 				}
 			}
 		});
 		
-		JButton clearBtn = new JButton("Clear");
-		clearBtn.addActionListener(new ActionListener(){
+		//------------------clearBtn------------------
+		clearBtn = new Button("Clear");
+		clearBtn.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void handle(ActionEvent e) {
 				textArea.setText("");
 			}
 		});
 		
-		contentPanel = new JPanel();
-		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+		//------------------Res2srcBtn------------------
+				Res2srcBtn = new Button("Result2Source");
+				Res2srcBtn.setOnAction(new EventHandler<ActionEvent>(){
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						if(resultArea.getText().equals("")){
+							Dialogs.create().owner(stage).title("Error!").masthead("Result text is empty.").message("Result text is empty. Please elimnate text first.").showInformation();
+							return;
+						}else{
+							String res = resultArea.getText();
+							String src = textArea.getText();
+							resultArea.setText(src);
+							textArea.setText(res);
+						}
+					}
+					
+				});
 		
-		textArea = new JTextArea(10, 20);
-		textArea.setBorder(border);
-		textArea.setLineWrap(true);
-		JScrollPane textAreaScroll = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		contentPanel.add(textAreaScroll);
-		buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-		buttonPanel.add(fileChooseBtn);
-		buttonPanel.add(convertBtn);
-		buttonPanel.add(copyBtn);
-		buttonPanel.add(clearBtn);
-		buttonPanel.add(Res2srcBtn);
-		contentPanel.add(buttonPanel);
-		
-		//bottomPanel = new JPanel();
-		resultArea = new JTextArea(10, 20);
+		//------------------textArea------------------		
+		textArea = new TextArea();
+		textArea.setWrapText(true);
+				
+		ScrollPane textAreaScroll = new ScrollPane(textArea);
+		textAreaScroll.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		textAreaScroll.setVbarPolicy(ScrollBarPolicy.NEVER);
+		textAreaScroll.setFitToHeight(true);
+		textAreaScroll.setFitToWidth(true);
+				
+		//------------------resultArea------------------
+		resultArea = new TextArea();
 		resultArea.setEditable(false);
-		resultArea.setBorder(border);
-		resultArea.setLineWrap(true);
-		//contentPanel.add(bottomPanel, "South");
+		resultArea.setWrapText(true);
 		
-		JScrollPane resultAreaScroll = new JScrollPane(resultArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		//bottomPanel.add(resultAreaScroll);
-		contentPanel.add(resultAreaScroll, "South");
-		mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.add(contentPanel, "West");
-		mainPanel.add(optionPanel, "East");
+		ScrollPane resultAreaScroll = new ScrollPane(resultArea);
+		resultAreaScroll.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		resultAreaScroll.setVbarPolicy(ScrollBarPolicy.NEVER);
+		resultAreaScroll.setFitToHeight(true);
+		resultAreaScroll.setFitToWidth(true);
 		
-		this.setContentPane(mainPanel);
-		pack();
-		setLocationRelativeTo(null);
+		//------------------buttonWrapper------------------
+		buttonWrapper = new HBox();
+		buttonWrapper.getStyleClass().add("background");
+		buttonWrapper.getChildren().add(fileChooseBtn);
+		buttonWrapper.getChildren().add(convertBtn);
+		buttonWrapper.getChildren().add(copyBtn);
+		buttonWrapper.getChildren().add(clearBtn);
+		buttonWrapper.getChildren().add(Res2srcBtn);
+	
+		//------------------Constraints------------------
+		ColumnConstraints columnConstraints = new ColumnConstraints();
+	    columnConstraints.setFillWidth(true);
+	    columnConstraints.setHgrow(Priority.ALWAYS);
+	    RowConstraints rowConstraints = new RowConstraints();
+	    rowConstraints.setFillHeight(true);
+	    rowConstraints.setVgrow(Priority.ALWAYS);
+	    
+		//------------------leftWrapper------------------
+		leftWrapper = new GridPane();
+		leftWrapper.getStyleClass().add("background");
+		leftWrapper.add(textAreaScroll, 0, 0);
+		leftWrapper.add(buttonWrapper, 0, 1);
+		leftWrapper.add(resultAreaScroll, 0, 2);
+	    leftWrapper.getColumnConstraints().add(columnConstraints);
+	    leftWrapper.getRowConstraints().add(rowConstraints);
+	    
 		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//------------------root------------------
+		root = new GridPane();
+		root.getStyleClass().add("background");
+		root.add(leftWrapper, 0, 0);
+		root.add(rightWrapper, 1, 0);
+	    root.getColumnConstraints().add(columnConstraints);
+	    root.getRowConstraints().add(rowConstraints);
+						
+		//------------------evanescent------------------
+		Scene evanescent = new Scene(root);
+		evanescent.getStylesheets().add("resources/JMetroDarkTheme.css");
+				
+		//------------------stage------------------
+		stage.getIcons().add(new Image(ClassLoader.getSystemResourceAsStream("resources/icon.png")));
+		stage.setTitle("WordTool 14");
+		stage.setScene(evanescent);
+		stage.show();
 		
-		setVisible(true);
+		//------------------Trash of swing------------------
+		//textArea.setBorder(border);
+		//customString.setBorder(border);
+		//customRegex.setBorder(border);
+		//resultArea.setBorder(border);
+		
+
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public static void setUIFont (javax.swing.plaf.FontUIResource f){
-	    java.util.Enumeration keys = UIManager.getDefaults().keys();
-	    while (keys.hasMoreElements()) {
-	      Object key = keys.nextElement();
-	      Object value = UIManager.get (key);
-	      if (value != null && value instanceof javax.swing.plaf.FontUIResource)
-	        UIManager.put (key, f);
-	      }
-	    } 
+	public static void main(String[] args){
+		//String java_version = System.getProperty("java.specification.version");
+		//if(Integer.parseInt(java_version.split(".")[1]) > 8){
+			//pls use launch4j
+		//}
+		launch(args);
+	}
+
 }
