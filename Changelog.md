@@ -42,3 +42,10 @@ version 2005 βeta
 updated UI to JavaFX.
 fixed new options : useCRLF
 divded Clean to empty Lines and empty Brackets
+
+----
+
+2014.08.21 20:48
+version 2106 βeta
+
+added swing. so you can use Swing UI if you're using java 1.6 ~ 1.7
