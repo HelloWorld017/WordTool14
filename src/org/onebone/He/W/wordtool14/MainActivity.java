@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
-
 //------------------JavaFX GUI------------------
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -50,6 +49,9 @@ public class MainActivity extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
+		//------------------closeSplash------------------
+		
+		Splash.dispose();
 		
 		//------------------optionPanel------------------
 		optionPanel = new VBox();
@@ -82,7 +84,7 @@ public class MainActivity extends Application {
 		Label customRegexLabel = new Label("Custom Regex");
 		customRegexLabel.getStyleClass().add("item-title");
 		regexPanel.setLeft(customRegexLabel);
-		customRegex = new TextArea("\\[EDIT\\]|\\[편집\\]\n.*문서를 참고하십시오.");
+		customRegex = new TextArea("\\[EDIT\\]|\\[편집\\]\n.*문서를 참고하십시오[.]");
 		ScrollPane regexScr = new ScrollPane(customRegex);
 		regexScr.setScaleX(optionPanel.getScaleX());
 		regexScr.setScaleY(optionPanel.getScaleY());
@@ -300,13 +302,28 @@ public class MainActivity extends Application {
 		
 
 	}
+	public static void lc(String[] args){
+		launch(args);
+	}
 	
 	public static void main(String[] args){
-		//String java_version = System.getProperty("java.specification.version");
-		//if(Integer.parseInt(java_version.split(".")[1]) > 8){
-			//pls use launch4j
-		//}
-		launch(args);
+		try {
+		//------------------Splash Screen (java.awt.SplashScreen is not compatible with JavaFX8)------------------
+		
+		//------------------Java Version check------------------
+		String java_version = System.getProperty("java.specification.version");
+		System.out.println(java_version);
+		
+		if(Integer.parseInt(java_version.split("[.]")[1]) >= 8){
+		//------------------If java version is over than 1.8------------------
+			Splash.splash(true, args);
+		}else{
+			Splash.splash(false, args);
+		}
+		
+		}catch (Exception e){
+			System.exit(0);
+		}
 	}
 
 }
