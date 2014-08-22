@@ -84,7 +84,7 @@ public class MainActivity extends Application {
 		Label customRegexLabel = new Label("Custom Regex");
 		customRegexLabel.getStyleClass().add("item-title");
 		regexPanel.setLeft(customRegexLabel);
-		customRegex = new TextArea("\\[EDIT\\]|\\[편집\\]\n.*문서를 참고하십시오[.]");
+		customRegex = new TextArea("\\[EDIT\\]|\\[편집\\]\n.*문서를 참고하십시오[.]\n이 부분의 본문은 .*입니다[.]");
 		ScrollPane regexScr = new ScrollPane(customRegex);
 		regexScr.setScaleX(optionPanel.getScaleX());
 		regexScr.setScaleY(optionPanel.getScaleY());
@@ -98,7 +98,7 @@ public class MainActivity extends Application {
 		Label customStringLabel = new Label("Custom String");
 		customStringLabel.getStyleClass().add("item-title");
 		stringPanel.setLeft(customStringLabel);
-		customString = new TextArea("");
+		customString = new TextArea("이 글을 보려면 오른쪽 '보이기' 버튼을 누르세요!\n[보이기]");
 		ScrollPane stringScr = new ScrollPane(customString);
 		stringScr.setScaleX(optionPanel.getScaleX());
 		stringScr.setScaleY(optionPanel.getScaleY());

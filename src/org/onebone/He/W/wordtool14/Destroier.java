@@ -118,7 +118,7 @@ public class Destroier {
 		if(customString.equals("") == false){
 			String[] splits = customString.split("\n");
 			for(String split : splits){
-				s = s.replaceAll(split, "");
+				s = s.replace(split, "");
 			}
 		}
 		
