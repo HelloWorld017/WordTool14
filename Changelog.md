@@ -56,3 +56,4 @@ version 2207 βeta
 
 fixed custom string works like custom regex.
 added some regexes and strings.
+Now splashing using SplashScreen.
