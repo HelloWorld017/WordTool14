@@ -5,10 +5,14 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
+//------------------About Splash------------------
+import java.awt.SplashScreen;
+
 //------------------About Files------------------
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
 
 
 //------------------JavaFX GUI------------------
@@ -50,8 +54,10 @@ public class MainActivity extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		//------------------closeSplash------------------
-		
-		Splash.dispose();
+			SplashScreen ss = SplashScreen.getSplashScreen();
+			if(ss != null){
+				ss.close();
+			}
 		
 		//------------------optionPanel------------------
 		optionPanel = new VBox();
@@ -302,9 +308,7 @@ public class MainActivity extends Application {
 		
 
 	}
-	public static void lc(String[] args){
-		launch(args);
-	}
+
 	
 	public static void main(String[] args){
 		try {
@@ -316,9 +320,9 @@ public class MainActivity extends Application {
 		
 		if(Integer.parseInt(java_version.split("[.]")[1]) >= 8){
 		//------------------If java version is over than 1.8------------------
-			Splash.splash(true, args);
+			launch(args);
 		}else{
-			Splash.splash(false, args);
+			new SwingMainActivity();
 		}
 		
 		}catch (Exception e){
