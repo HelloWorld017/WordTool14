@@ -3,6 +3,7 @@ package org.onebone.He.W.wordtool14;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.SplashScreen;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -39,7 +40,10 @@ public class SwingMainActivity extends JFrame{
 	
 	public SwingMainActivity(){
 		super("WordTool14");
-		Splash.dispose();
+		SplashScreen ss = SplashScreen.getSplashScreen();
+		if(ss != null){
+			ss.close();
+		}
 		URL url = ClassLoader.getSystemResource("resources/icon.png");
 		
 		this.setIconImage(Toolkit.getDefaultToolkit().createImage(url));
